@@ -20,11 +20,11 @@ void setup() {
   digitalWrite(D4, HIGH);
   Mesh.connect();
   Particle.connect();
-  digitalWrite(D4, LOW);
 
 }
 
 void loop() {
+  digitalWrite(D4, LOW);
   float temp = mcp.getTemperature();
   snprintf(buffer, sizeof(buffer), "%2.1f", temp);
   Particle.publish("tempUpdate", buffer);
