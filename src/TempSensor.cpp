@@ -1,8 +1,8 @@
 #include "application.h"
-#line 1 "/Users/kevinmcquown/Dropbox/WCL/wcltalkstech/TempSensor/src/TempSensor.ino"
+#line 1 "/Users/kevinmcquown/Dropbox/WCL/wcltalkstech/TempSensorProject/TempSensor/src/TempSensor.ino"
 void setup();
 void loop();
-#line 1 "/Users/kevinmcquown/Dropbox/WCL/wcltalkstech/TempSensor/src/TempSensor.ino"
+#line 1 "/Users/kevinmcquown/Dropbox/WCL/wcltalkstech/TempSensorProject/TempSensor/src/TempSensor.ino"
 SYSTEM_MODE(SEMI_AUTOMATIC);
 
 #include "MCP9808.h"
@@ -22,16 +22,18 @@ void setup() {
     delay(500);
   }
 
-  digitalWrite(D4, HIGH);
   Mesh.connect();
   Particle.connect();
 
 }
 
 void loop() {
-  digitalWrite(D4, LOW);
   float temp = mcp.getTemperature();
   snprintf(buffer, sizeof(buffer), "%2.1f", temp);
-  Particle.publish("tempUpdate", buffer);
+  Particle.publish("newTemp", buffer);
   delay(5000);
+  digitalWrite(D4, HIGH);
+  delay(1000);
+  digitalWrite(D4, LOW);
+
 }
