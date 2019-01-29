@@ -1,8 +1,11 @@
-SYSTEM_MODE(SEMI_AUTOMATIC);
+SYSTEM_MODE(MANUAL);
 
 #include "MCP9808.h"
 
 MCP9808 mcp = MCP9808();
+
+const long interval = 10 * 1000;
+unsigned long previousTime = 0;
 
 char buffer[100];
 
@@ -17,18 +20,26 @@ void setup() {
     delay(500);
   }
 
-  Mesh.connect();
-  Particle.connect();
-
 }
 
 void loop() {
-  float temp = mcp.getTemperature();
-  snprintf(buffer, sizeof(buffer), "%2.1f", temp);
-  Particle.publish("newTemp", buffer);
-  delay(5000);
-  digitalWrite(D4, HIGH);
-  delay(1000);
-  digitalWrite(D4, LOW);
+  unsigned long currentTime = millis();
 
+  if ( currentTime - previousTime >= interval) {
+    previousTime = currentTime;
+    Mesh.on();
+    Mesh.connect();
+    while (Mesh.connecting()) {
+      // Wait until connected
+    }
+    if (Mesh.ready()) {
+      float temp = mcp.getTemperature();
+      snprintf(buffer, sizeof(buffer), "%2.1f", temp);
+      Particle.publish("newTemp", buffer);
+      Mesh.off();
+      digitalWrite(D4, HIGH);
+      delay(1000);
+      digitalWrite(D4, LOW);
+    }
+  }
 }
