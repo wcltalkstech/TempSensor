@@ -27,6 +27,10 @@ void setup() {
 
 }
 
+uint8_t count = 0;
+
+float temp;
+
 void loop() {
   unsigned long currentTime = millis();
 
@@ -34,17 +38,17 @@ void loop() {
     previousTime = currentTime;
     Mesh.on();
     Mesh.connect();
-    while (Mesh.connecting()) {
-      // Wait until connected
-    }
-    if (Mesh.ready()) {
-      float temp = mcp.getTemperature();
-      snprintf(buffer, sizeof(buffer), "%2.1f", temp);
-      Particle.publish("newTemp", buffer);
-      Mesh.off();
-      digitalWrite(D4, HIGH);
-      delay(1000);
-      digitalWrite(D4, LOW);
-    }
+    waitUntil(Mesh.connecting);
+    waitUntil(Mesh.ready);
+    temp = mcp.getTemperature() + count;
+    count++;
+    delay(50);
+    snprintf(buffer, sizeof(buffer), "%2.1f", temp);
+    Mesh.publish("newTemp", buffer);
+    Mesh.off();
+    digitalWrite(D4, HIGH);
+    delay(1000);
+    digitalWrite(D4, LOW);
+
   }
 }
