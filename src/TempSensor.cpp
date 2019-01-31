@@ -3,6 +3,7 @@
 void setup();
 void loop();
 #line 1 "/Users/kevinmcquown/Dropbox/WCL/wcltalkstech/TempSensorProject/TempSensor/src/TempSensor.ino"
+SYSTEM_THREAD(ENABLED);
 SYSTEM_MODE(MANUAL);
 
 #include "MCP9808.h"
@@ -40,8 +41,7 @@ void loop() {
     Mesh.connect();
     waitUntil(Mesh.connecting);
     waitUntil(Mesh.ready);
-    temp = mcp.getTemperature() + count;
-    count++;
+    temp = mcp.getTemperature();
     delay(50);
     snprintf(buffer, sizeof(buffer), "%2.1f", temp);
     Mesh.publish("newTemp", buffer);
