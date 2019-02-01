@@ -10,7 +10,7 @@ SYSTEM_MODE(MANUAL);
 
 MCP9808 mcp = MCP9808();
 
-const long interval = 10 * 1000;
+const long interval = 3 * 1000;
 unsigned long previousTime = 0;
 
 char buffer[100];
